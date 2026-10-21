@@ -36,19 +36,15 @@ type PhysicsMode = 'match' | 'write';
           <div class="mode-note"><svg class="sparkle-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 14.8 9l6.7 3-6.7 2.9L12 21.5l-2.8-6.6L2.5 12l6.7-3L12 2.5Z"/></svg><span>Svaren kommer i olika ordning varje gång.</span></div>
           <div class="answer-sheet german-sheet">
             @for (item of germanQuestions(); track item.swedish; let i = $index) {
-              <label class="answer-row" [class.right-row]="germanChecked() && isGermanCorrect(item)" [class.wrong-row]="germanChecked() && !isGermanCorrect(item)">
+              <div class="answer-row" [class.right-row]="germanChecks()[item.swedish] === true" [class.wrong-row]="germanChecks()[item.swedish] === false">
                 <span class="row-number">{{ i + 1 }}</span><span class="prompt-text">{{ item.swedish }}</span>
-                <input type="text" [(ngModel)]="germanAnswers()[item.swedish]" [disabled]="germanChecked()" [attr.aria-label]="'Skriv på tyska: ' + item.swedish" placeholder="Skriv på tyska…" lang="de" autocomplete="off" autocapitalize="none" spellcheck="false">
-                @if (germanChecked()) { <span class="mark-icon" [class.mark-wrong]="!isGermanCorrect(item)">@if (isGermanCorrect(item)) {<svg class="status-icon" viewBox="0 0 24 24" aria-label="Rätt"><path d="m5 12 4.5 4.5L19 7"/></svg>} @else {<svg class="status-icon retry-icon" viewBox="0 0 24 24" aria-label="Fel"><path d="M20 7v5h-5M4.8 10a7.5 7.5 0 0 1 12.8-3L20 9M4 17v-5h5m10.2 2a7.5 7.5 0 0 1-12.8 3L4 15"/></svg>}</span> }
-              </label>
-              @if (germanChecked() && !isGermanCorrect(item)) { <p class="correct-answer">Rätt svar: <strong>{{ item.german }}</strong></p> }
+                <div class="answer-entry"><input type="text" [(ngModel)]="germanAnswers()[item.swedish]" (ngModelChange)="germanAnswerChanged(item)" [disabled]="germanChecks()[item.swedish] === true" [attr.aria-label]="'Skriv på tyska: ' + item.swedish" placeholder="Skriv på tyska…" lang="de" autocomplete="off" autocapitalize="none" spellcheck="false"><button class="row-check" [disabled]="germanChecks()[item.swedish] === true" (click)="checkGermanItem(item)">{{ germanChecks()[item.swedish] === true ? 'Rätt' : germanChecks()[item.swedish] === false ? 'Rätta igen' : 'Rätta' }}</button></div>
+                @if (germanChecks()[item.swedish] !== undefined) { <span class="mark-icon" [class.mark-wrong]="germanChecks()[item.swedish] === false">@if (germanChecks()[item.swedish]) {<svg class="status-icon" viewBox="0 0 24 24" aria-label="Rätt"><path d="m5 12 4.5 4.5L19 7"/></svg>} @else {<svg class="status-icon retry-icon" viewBox="0 0 24 24" aria-label="Fel"><path d="M20 7v5h-5M4.8 10a7.5 7.5 0 0 1 12.8-3L20 9M4 17v-5h5m10.2 2a7.5 7.5 0 0 1-12.8 3L4 15"/></svg>}</span> }
+              </div>
+              @if (germanChecks()[item.swedish] === false) { <p class="correct-answer">Rätt svar: <strong>{{ item.german }}</strong></p> }
             }
           </div>
-          @if (!germanChecked()) {
-            <div class="submit-row"><span class="help-note">Tips: På iPad kan du skriva med Apple Pencil i svarsfälten.</span><button class="primary-button" (click)="checkGerman()">Klar – rätta alla <svg class="button-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4.5 4.5L19 7"/></svg></button></div>
-          } @else {
-            <div class="result-banner"><svg class="result-icon" viewBox="0 0 32 32" aria-hidden="true"><path d="m16 2 3.4 9.3 9.1-3.1-5.7 7.8 7.1 6.4-9.5-.7-2.4 9.2-3.9-8.7-8.6 4.1 4.1-8.6L5 12.6l9.2 1L16 2Z"/></svg><p><strong>{{ germanScore() }} av {{ germanQuestions().length }} rätt!</strong> {{ germanScore() === germanQuestions().length ? 'Allihop satt!' : 'Bra övat – testa igen när du vill.' }}</p><button class="secondary-button" (click)="openGerman()">Öva igen</button></div>
-          }
+          <div class="practice-actions"><span class="help-note">{{ germanReviewedCount() }} av {{ germanQuestions().length }} rättade · tips: Apple Pencil fungerar i svarsfälten</span>@if (allGermanReviewed() && germanWrongCount()) {<button class="secondary-button" (click)="retryGermanMistakes()">Öva på de {{ germanWrongCount() }} felaktiga</button>} @if (germanMistakeRound()) {<button class="secondary-button" (click)="openGerman()">Alla glosor</button>}</div>
         </section>
       }
 
@@ -64,33 +60,31 @@ type PhysicsMode = 'match' | 'write';
             <p class="mode-description">Välj rätt förklaring till varje begrepp. Du kan ändra svaren innan du rättar.</p>
             <div class="match-list">
               @for (term of shuffledPhysics(); track term.term; let i = $index) {
-                <label class="match-row" [class.right-row]="physicsChecked() && matchAnswers()[term.term] === term.term" [class.wrong-row]="physicsChecked() && matchAnswers()[term.term] !== term.term">
+                  <div class="match-row" [class.right-row]="matchChecks()[term.term] === true" [class.wrong-row]="matchChecks()[term.term] === false">
                   <span class="row-number">{{ i + 1 }}</span><img class="physics-illustration" [src]="'physics/' + term.image" alt=""><strong>{{ term.term }}</strong>
-                  <select [(ngModel)]="matchAnswers()[term.term]" [disabled]="physicsChecked()" [attr.aria-label]="'Förklaring för ' + term.term">
+                  <div class="answer-entry match-entry"><select [(ngModel)]="matchAnswers()[term.term]" (ngModelChange)="physicsMatchChanged(term)" [disabled]="matchChecks()[term.term] === true" [attr.aria-label]="'Förklaring för ' + term.term">
                     <option value="">Välj en förklaring…</option>
                     @for (option of shuffledPhysics(); track option.term) { <option [value]="option.term">{{ option.definition }}</option> }
-                  </select>
-                  @if (physicsChecked()) { <span class="mark-icon" [class.mark-wrong]="matchAnswers()[term.term] !== term.term">@if (matchAnswers()[term.term] === term.term) {<svg class="status-icon" viewBox="0 0 24 24" aria-label="Rätt"><path d="m5 12 4.5 4.5L19 7"/></svg>} @else {<svg class="status-icon retry-icon" viewBox="0 0 24 24" aria-label="Fel"><path d="M20 7v5h-5M4.8 10a7.5 7.5 0 0 1 12.8-3L20 9M4 17v-5h5m10.2 2a7.5 7.5 0 0 1-12.8 3L4 15"/></svg>}</span> }
-                </label>
-                @if (physicsChecked() && matchAnswers()[term.term] !== term.term) { <p class="correct-answer match-correction">Rätt förklaring: <strong>{{ term.definition }}</strong></p> }
+                  </select><button class="row-check" [disabled]="matchChecks()[term.term] === true" (click)="checkPhysicsMatch(term)">{{ matchChecks()[term.term] === true ? 'Rätt' : matchChecks()[term.term] === false ? 'Rätta igen' : 'Rätta' }}</button></div>
+                  @if (matchChecks()[term.term] !== undefined) { <span class="mark-icon" [class.mark-wrong]="matchChecks()[term.term] === false">@if (matchChecks()[term.term]) {<svg class="status-icon" viewBox="0 0 24 24" aria-label="Rätt"><path d="m5 12 4.5 4.5L19 7"/></svg>} @else {<svg class="status-icon retry-icon" viewBox="0 0 24 24" aria-label="Fel"><path d="M20 7v5h-5M4.8 10a7.5 7.5 0 0 1 12.8-3L20 9M4 17v-5h5m10.2 2a7.5 7.5 0 0 1-12.8 3L4 15"/></svg>}</span> }
+                  </div>
+                @if (matchChecks()[term.term] === false) { <p class="correct-answer match-correction">Rätt förklaring: <strong>{{ term.definition }}</strong></p> }
               }
             </div>
-            @if (physicsChecked()) { <div class="result-banner"><svg class="result-icon" viewBox="0 0 32 32" aria-hidden="true"><path d="m16 2 3.4 9.3 9.1-3.1-5.7 7.8 7.1 6.4-9.5-.7-2.4 9.2-3.9-8.7-8.6 4.1 4.1-8.6L5 12.6l9.2 1L16 2Z"/></svg><p><strong>{{ physicsScore() }} av {{ shuffledPhysics().length }} rätt!</strong> {{ physicsScore() === shuffledPhysics().length ? 'Du kan begreppen!' : 'Titta på rätt svar och öva vidare.' }}</p><button class="secondary-button" (click)="resetPhysics()">Börja om</button></div> }
-            @else { <div class="submit-row"><span class="help-note">Alla svar rättas på en gång.</span><button class="primary-button" (click)="checkPhysics()">Klar – rätta alla <svg class="button-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4.5 4.5L19 7"/></svg></button></div> }
+            <div class="practice-actions"><span class="help-note">{{ physicsReviewedCount() }} av {{ shuffledPhysics().length }} rättade</span>@if (allPhysicsReviewed() && physicsWrongCount()) {<button class="secondary-button" (click)="retryPhysicsMistakes()">Öva på de {{ physicsWrongCount() }} felaktiga</button>} @if (physicsMistakeRound()) {<button class="secondary-button" (click)="resetPhysics()">Alla begrepp</button>}</div>
           } @else {
             <p class="mode-description">Läs förklaringen och skriv vilket fysikbegrepp som passar.</p>
             <div class="answer-sheet physics-write-sheet">
               @for (term of shuffledPhysics(); track term.term; let i = $index) {
-                <label class="definition-row" [class.right-row]="physicsChecked() && isPhysicsCorrect(term)" [class.wrong-row]="physicsChecked() && !isPhysicsCorrect(term)">
+                <div class="definition-row" [class.right-row]="writeChecks()[term.term] === true" [class.wrong-row]="writeChecks()[term.term] === false">
                   <span class="row-number">{{ i + 1 }}</span><img class="physics-illustration" [src]="'physics/' + term.image" alt=""><span class="definition-text">{{ term.definition }}</span>
-                  <input type="text" [(ngModel)]="physicsAnswers()[term.term]" [disabled]="physicsChecked()" [attr.aria-label]="'Skriv begreppet för: ' + term.definition" placeholder="Skriv begreppet…" autocomplete="off" autocapitalize="none" spellcheck="false">
-                  @if (physicsChecked()) { <span class="mark-icon" [class.mark-wrong]="!isPhysicsCorrect(term)">@if (isPhysicsCorrect(term)) {<svg class="status-icon" viewBox="0 0 24 24" aria-label="Rätt"><path d="m5 12 4.5 4.5L19 7"/></svg>} @else {<svg class="status-icon retry-icon" viewBox="0 0 24 24" aria-label="Fel"><path d="M20 7v5h-5M4.8 10a7.5 7.5 0 0 1 12.8-3L20 9M4 17v-5h5m10.2 2a7.5 7.5 0 0 1-12.8 3L4 15"/></svg>}</span> }
-                </label>
-                @if (physicsChecked() && !isPhysicsCorrect(term)) { <p class="correct-answer">Rätt begrepp: <strong>{{ term.term }}</strong></p> }
+                  <div class="answer-entry"><input type="text" [(ngModel)]="physicsAnswers()[term.term]" (ngModelChange)="physicsWriteChanged(term)" [disabled]="writeChecks()[term.term] === true" [attr.aria-label]="'Skriv begreppet för: ' + term.definition" placeholder="Skriv begreppet…" autocomplete="off" autocapitalize="none" spellcheck="false"><button class="row-check" [disabled]="writeChecks()[term.term] === true" (click)="checkPhysicsWrite(term)">{{ writeChecks()[term.term] === true ? 'Rätt' : writeChecks()[term.term] === false ? 'Rätta igen' : 'Rätta' }}</button></div>
+                  @if (writeChecks()[term.term] !== undefined) { <span class="mark-icon" [class.mark-wrong]="writeChecks()[term.term] === false">@if (writeChecks()[term.term]) {<svg class="status-icon" viewBox="0 0 24 24" aria-label="Rätt"><path d="m5 12 4.5 4.5L19 7"/></svg>} @else {<svg class="status-icon retry-icon" viewBox="0 0 24 24" aria-label="Fel"><path d="M20 7v5h-5M4.8 10a7.5 7.5 0 0 1 12.8-3L20 9M4 17v-5h5m10.2 2a7.5 7.5 0 0 1-12.8 3L4 15"/></svg>}</span> }
+                </div>
+                @if (writeChecks()[term.term] === false) { <p class="correct-answer">Rätt begrepp: <strong>{{ term.term }}</strong></p> }
               }
             </div>
-            @if (physicsChecked()) { <div class="result-banner"><svg class="result-icon" viewBox="0 0 32 32" aria-hidden="true"><path d="m16 2 3.4 9.3 9.1-3.1-5.7 7.8 7.1 6.4-9.5-.7-2.4 9.2-3.9-8.7-8.6 4.1 4.1-8.6L5 12.6l9.2 1L16 2Z"/></svg><p><strong>{{ physicsScore() }} av {{ shuffledPhysics().length }} rätt!</strong> {{ physicsScore() === shuffledPhysics().length ? 'Du kan begreppen!' : 'Bra övat – testa igen när du vill.' }}</p><button class="secondary-button" (click)="resetPhysics()">Öva igen</button></div> }
-            @else { <div class="submit-row"><span class="help-note">Skriv så många svar du kan.</span><button class="primary-button" (click)="checkPhysics()">Klar – rätta alla <svg class="button-check" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4.5 4.5L19 7"/></svg></button></div> }
+            <div class="practice-actions"><span class="help-note">{{ physicsReviewedCount() }} av {{ shuffledPhysics().length }} rättade</span>@if (allPhysicsReviewed() && physicsWrongCount()) {<button class="secondary-button" (click)="retryPhysicsMistakes()">Öva på de {{ physicsWrongCount() }} felaktiga</button>} @if (physicsMistakeRound()) {<button class="secondary-button" (click)="resetPhysics()">Alla begrepp</button>}</div>
           }
         </section>
       }
@@ -106,18 +100,19 @@ export class App {
   readonly germanAnswers = signal<Record<string, string>>({});
   readonly matchAnswers = signal<Record<string, string>>({});
   readonly physicsAnswers = signal<Record<string, string>>({});
-  readonly germanChecked = signal(false);
-  readonly physicsChecked = signal(false);
-  readonly germanScore = signal(0);
-  readonly physicsScore = signal(0);
+  readonly germanChecks = signal<Record<string, boolean>>({});
+  readonly matchChecks = signal<Record<string, boolean>>({});
+  readonly writeChecks = signal<Record<string, boolean>>({});
+  readonly germanMistakeRound = signal(false);
+  readonly physicsMistakeRound = signal(false);
 
   goHome(): void { this.subject.set('home'); }
 
   openGerman(): void {
     this.germanQuestions.set(this.shuffle(germanWords));
     this.germanAnswers.set({});
-    this.germanChecked.set(false);
-    this.germanScore.set(0);
+    this.germanChecks.set({});
+    this.germanMistakeRound.set(false);
     this.subject.set('german');
   }
 
@@ -135,26 +130,79 @@ export class App {
     this.shuffledPhysics.set(this.shuffle(physicsTerms));
     this.matchAnswers.set({});
     this.physicsAnswers.set({});
-    this.physicsChecked.set(false);
-    this.physicsScore.set(0);
+    this.matchChecks.set({});
+    this.writeChecks.set({});
+    this.physicsMistakeRound.set(false);
   }
 
-  checkGerman(): void {
-    this.germanScore.set(this.germanQuestions().filter((item) => this.isGermanCorrect(item)).length);
-    this.germanChecked.set(true);
+  checkGermanItem(item: typeof germanWords[number]): void {
+    this.germanChecks.set({ ...this.germanChecks(), [item.swedish]: this.isGermanCorrect(item) });
+  }
+
+  germanAnswerChanged(item: typeof germanWords[number]): void {
+    const checks = { ...this.germanChecks() };
+    delete checks[item.swedish];
+    this.germanChecks.set(checks);
+  }
+
+  germanReviewedCount(): number { return Object.keys(this.germanChecks()).length; }
+  germanWrongCount(): number { return this.germanQuestions().filter((item) => this.germanChecks()[item.swedish] === false).length; }
+  allGermanReviewed(): boolean { return this.germanReviewedCount() === this.germanQuestions().length; }
+
+  retryGermanMistakes(): void {
+    const mistakes = this.germanQuestions().filter((item) => this.germanChecks()[item.swedish] === false);
+    if (!mistakes.length) return;
+    this.germanQuestions.set(this.shuffle(mistakes));
+    this.germanAnswers.set({});
+    this.germanChecks.set({});
+    this.germanMistakeRound.set(true);
+  }
+
+  checkPhysicsMatch(term: PhysicsTerm): void {
+    this.matchChecks.set({ ...this.matchChecks(), [term.term]: this.matchAnswers()[term.term] === term.term });
+  }
+
+  physicsMatchChanged(term: PhysicsTerm): void {
+    const checks = { ...this.matchChecks() };
+    delete checks[term.term];
+    this.matchChecks.set(checks);
+  }
+
+  checkPhysicsWrite(term: PhysicsTerm): void {
+    this.writeChecks.set({ ...this.writeChecks(), [term.term]: this.isPhysicsCorrect(term) });
+  }
+
+  physicsWriteChanged(term: PhysicsTerm): void {
+    const checks = { ...this.writeChecks() };
+    delete checks[term.term];
+    this.writeChecks.set(checks);
+  }
+
+  physicsReviewedCount(): number {
+    return Object.keys(this.physicsMode() === 'match' ? this.matchChecks() : this.writeChecks()).length;
+  }
+
+  physicsWrongCount(): number {
+    const checks = this.physicsMode() === 'match' ? this.matchChecks() : this.writeChecks();
+    return this.shuffledPhysics().filter((term) => checks[term.term] === false).length;
+  }
+
+  allPhysicsReviewed(): boolean { return this.physicsReviewedCount() === this.shuffledPhysics().length; }
+
+  retryPhysicsMistakes(): void {
+    const checks = this.physicsMode() === 'match' ? this.matchChecks() : this.writeChecks();
+    const mistakes = this.shuffledPhysics().filter((term) => checks[term.term] === false);
+    if (!mistakes.length) return;
+    this.shuffledPhysics.set(this.shuffle(mistakes));
+    this.matchAnswers.set({});
+    this.physicsAnswers.set({});
+    this.matchChecks.set({});
+    this.writeChecks.set({});
+    this.physicsMistakeRound.set(true);
   }
 
   isGermanCorrect(item: typeof germanWords[number]): boolean {
     return this.normalize(this.germanAnswers()[item.swedish] ?? '') === this.normalize(item.german);
-  }
-
-  checkPhysics(): void {
-    const terms = this.shuffledPhysics();
-    const correct = this.physicsMode() === 'match'
-      ? terms.filter((term) => this.matchAnswers()[term.term] === term.term).length
-      : terms.filter((term) => this.isPhysicsCorrect(term)).length;
-    this.physicsScore.set(correct);
-    this.physicsChecked.set(true);
   }
 
   isPhysicsCorrect(term: PhysicsTerm): boolean {

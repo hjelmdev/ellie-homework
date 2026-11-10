@@ -13,7 +13,7 @@ type PhysicsMode = 'match' | 'write';
     <main class="page-shell">
       <header class="topbar">
         <button class="brand" (click)="goHome()" aria-label="Till startsidan"><span class="brand-mark">e.</span><span>ellies läxhörna</span></button>
-        <span class="week-pill"><span class="dot"></span> Vecka 43</span>
+        <span class="week-pill"><span class="dot"></span> Vecka 46</span>
       </header>
 
       @if (subject() === 'home') {
@@ -21,10 +21,10 @@ type PhysicsMode = 'match' | 'write';
           <div><p class="eyebrow">HEJ ELLIE <svg class="sparkle-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 14.8 9l6.7 3-6.7 2.9L12 21.5l-2.8-6.6L2.5 12l6.7-3L12 2.5Z"/></svg></p><h1>Veckans läxa,<br>i din <em>egen takt.</em></h1><p class="intro">Välj ett ämne och öva på det du har lärt dig.</p></div>
           <div class="welcome-art"><img class="hero-portrait" src="ellie-football.png" alt="Ellie med sin fotbollspokal under en regnbåge"></div>
         </section>
-        <section class="section-heading"><div><p class="eyebrow">VECKA 43</p><h2>Vad vill du öva på?</h2></div><span class="count">2 ämnen</span></section>
+        <section class="section-heading"><div><p class="eyebrow">VECKA 46</p><h2>Vad vill du öva på?</h2></div><span class="count">2 ämnen</span></section>
         <section class="subject-grid" aria-label="Välj läxämne">
-          <button class="subject-card peach" (click)="openGerman()"><span class="subject-icon">Aa</span><span class="subject-label">TYSKA · GLOSOR</span><strong>Veckodagarna</strong><span class="subject-hint">Skriv det tyska ordet</span><span class="subject-link">Öva tyska <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></span></button>
-          <button class="subject-card blue" (click)="openPhysics()"><span class="subject-icon"><svg class="sparkle-icon subject-sparkle" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 14.8 9l6.7 3-6.7 2.9L12 21.5l-2.8-6.6L2.5 12l6.7-3L12 2.5Z"/></svg></span><span class="subject-label">FYSIK · KRAFT OCH RÖRELSE</span><strong>Begrepp & förklaringar</strong><span class="subject-hint">Para ihop eller skriv själv</span><span class="subject-link">Öva fysik <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></span></button>
+          <button class="subject-card peach" (click)="openGerman()"><span class="subject-icon">Aa</span><span class="subject-label">TYSKA · VECKA 46</span><strong>Meine Familie</strong><span class="subject-hint">Familjeord och släktingar</span><span class="subject-link">Öva tyska <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></span></button>
+          <button class="subject-card blue" (click)="openPhysics()"><span class="subject-icon"><svg class="sparkle-icon subject-sparkle" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 14.8 9l6.7 3-6.7 2.9L12 21.5l-2.8-6.6L2.5 12l6.7-3L12 2.5Z"/></svg></span><span class="subject-label">TIDIGARE · FYSIK V. 43</span><strong>Kraft och rörelse</strong><span class="subject-hint">Begrepp & förklaringar</span><span class="subject-link">Öva fysik <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></span></button>
         </section>
         <aside class="cheer"><svg class="cheer-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 14.8 9l6.7 3-6.7 2.9L12 21.5l-2.8-6.6L2.5 12l6.7-3L12 2.5Z"/></svg><p><strong>Ta en sak i taget.</strong> Du kan alltid komma tillbaka och öva mer.</p><svg class="cheer-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 8.8c0 5-8.5 11-8.5 11s-8.5-6-8.5-11a4.3 4.3 0 0 1 8.5-1 4.3 4.3 0 0 1 8.5 1Z"/></svg></aside>
       }
@@ -32,7 +32,7 @@ type PhysicsMode = 'match' | 'write';
       @if (subject() === 'german') {
         <section class="study-page">
           <button class="back-button" (click)="goHome()"><svg class="arrow-icon back-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m7 7-7-7 7-7"/></svg> Alla veckans ämnen</button>
-          <div class="study-heading"><div><p class="eyebrow">VECKA 43 · TYSKA</p><h1>Veckodagarna</h1><p class="intro">Skriv det tyska ordet som passar till varje svensk ledtråd.</p></div><span class="heading-icon peach">Aa</span></div>
+          <div class="study-heading"><div><p class="eyebrow">VECKA 46 · TYSKA</p><h1>Meine Familie</h1><p class="intro">Skriv det tyska familjeordet som passar till varje svensk ledtråd.</p></div><span class="heading-icon peach">Aa</span></div>
           <div class="mode-note"><svg class="sparkle-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 14.8 9l6.7 3-6.7 2.9L12 21.5l-2.8-6.6L2.5 12l6.7-3L12 2.5Z"/></svg><span>Svaren kommer i olika ordning varje gång.</span></div>
           <div class="answer-sheet german-sheet">
             @for (item of germanQuestions(); track item.swedish; let i = $index) {
@@ -202,7 +202,8 @@ export class App {
   }
 
   isGermanCorrect(item: typeof germanWords[number]): boolean {
-    return this.normalize(this.germanAnswers()[item.swedish] ?? '') === this.normalize(item.german);
+    const answer = this.normalize(this.germanAnswers()[item.swedish] ?? '');
+    return [item.german, ...(item.aliases ?? [])].some((candidate) => this.normalize(candidate) === answer);
   }
 
   isPhysicsCorrect(term: PhysicsTerm): boolean {

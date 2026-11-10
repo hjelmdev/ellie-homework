@@ -1,6 +1,6 @@
 # Ellies läxhörna
 
-En Angular-app för Ellies veckoläxor. Den här versionen innehåller tyska glosor och fysikbegrepp från vecka 43. Appen är statisk och behöver ingen backend.
+En Angular-app för Ellies veckoläxor. Den här versionen innehåller tyska familjeord från vecka 46 och fysikbegrepp från vecka 43. Appen är statisk och behöver ingen backend.
 
 ## Starta lokalt
 
@@ -17,10 +17,10 @@ npm start
 
 Läxornas innehåll finns i `src/app/homework.ts`.
 
-- `germanWords` innehåller en ledtråd och ett svar per rad. Veckodag och uttrycket ”på [dag]” är separata frågor och rättas var för sig.
+- `germanWords` innehåller en ledtråd, ett svar och ibland godkända alternativa stavningar per rad. Varje rad rättas för sig.
 - `physicsTerms` innehåller begrepp, förklaringar, SVG-illustrationer och eventuella godkända alternativa svar. Illustrationerna ligger i `public/physics/`.
 
-När nästa veckas läxor kommer uppdaterar du listorna där och veckonumret i `src/app/app.ts`. Ämnenas övningslägen är separata från innehållet.
+När nästa veckas läxor kommer uppdaterar du listorna där, kortet på startsidan och veckonumret i `src/app/app.ts`. Ämnenas övningslägen är separata från innehållet.
 
 På iPad går det att skriva i svarsfälten med tangentbordet eller använda iPadOS Scribble för att omvandla Apple Pencil-handskrift till text.
 

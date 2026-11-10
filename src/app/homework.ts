@@ -1,6 +1,7 @@
 export interface VocabularyWord {
   swedish: string;
   german: string;
+  aliases?: string[];
 }
 
 export interface PhysicsTerm {
@@ -12,21 +13,26 @@ export interface PhysicsTerm {
 
 // Uppdatera innehållet här när en ny veckas läxor kommer.
 export const germanWords: VocabularyWord[] = [
-  { swedish: 'Veckodagarna', german: 'die Wochentage' },
-  { swedish: 'Måndag', german: 'Montag' },
-  { swedish: 'På måndag', german: 'am Montag' },
-  { swedish: 'Tisdag', german: 'Dienstag' },
-  { swedish: 'På tisdag', german: 'am Dienstag' },
-  { swedish: 'Onsdag', german: 'Mittwoch' },
-  { swedish: 'På onsdag', german: 'am Mittwoch' },
-  { swedish: 'Torsdag', german: 'Donnerstag' },
-  { swedish: 'På torsdag', german: 'am Donnerstag' },
-  { swedish: 'Fredag', german: 'Freitag' },
-  { swedish: 'På fredag', german: 'am Freitag' },
-  { swedish: 'Lördag', german: 'Samstag' },
-  { swedish: 'På lördag', german: 'am Samstag' },
-  { swedish: 'Söndag', german: 'Sonntag' },
-  { swedish: 'På söndag', german: 'am Sonntag' }
+  { swedish: 'Pappan', german: 'der Vater/Papa', aliases: ['der Vater', 'der Papa'] },
+  { swedish: 'Min pappa', german: 'mein Vater/Papa', aliases: ['mein Vater', 'mein Papa'] },
+  { swedish: 'Mamman', german: 'die Mutter/Mama', aliases: ['die Mutter', 'die Mama'] },
+  { swedish: 'Min mamma', german: 'meine Mutter/Mama', aliases: ['meine Mutter', 'meine Mama'] },
+  { swedish: 'Brodern', german: 'der Bruder' },
+  { swedish: 'Min bror', german: 'mein Bruder' },
+  { swedish: 'Systern', german: 'die Schwester' },
+  { swedish: 'Min syster', german: 'meine Schwester' },
+  { swedish: 'Farbror/morbror', german: 'der Onkel' },
+  { swedish: 'Min farbror/morbror', german: 'mein Onkel' },
+  { swedish: 'Faster/moster', german: 'die Tante' },
+  { swedish: 'Min faster/moster', german: 'meine Tante' },
+  { swedish: 'Farmor/mormor', german: 'die Oma/Großmutter', aliases: ['die Oma', 'die Großmutter'] },
+  { swedish: 'Min farmor/mormor', german: 'meine Oma/Großmutter', aliases: ['meine Oma', 'meine Großmutter'] },
+  { swedish: 'Farfar/morfar', german: 'der Opa/Großvater', aliases: ['der Opa', 'der Großvater'] },
+  { swedish: 'Min farfar/morfar', german: 'mein Opa/Großvater', aliases: ['mein Opa', 'mein Großvater'] },
+  { swedish: 'Styvpappa/bonuspappa', german: 'der Stiefvater' },
+  { swedish: 'Styvmamma/bonusmamma', german: 'die Stiefmutter' },
+  { swedish: 'Den manliga kusinen', german: 'der Cousin' },
+  { swedish: 'Den kvinnliga kusinen', german: 'die Cousine' }
 ];
 
 export const physicsTerms: PhysicsTerm[] = [
